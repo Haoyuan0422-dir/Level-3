@@ -1,0 +1,25 @@
+using UnityEngine;
+
+public class PauseController : MonoBehaviour
+{
+    // 提供一个静态的布尔值，让其他脚本（如NPC）可以随时检查游戏是否暂停
+    public static bool IsGamePaused { get; private set; }
+
+    // 提供一个静态方法，供 NPC 脚本在开始或结束对话时调用
+    public static void SetPause(bool isPaused)
+    {
+        IsGamePaused = isPaused;
+
+        // 根据暂停状态执行具体逻辑 (老师视频里可能有额外的代码，比如禁用玩家移动)
+        if (isPaused)
+        {
+            //Time.timeScale = 0f; // 彻底暂停游戏时间
+            Debug.Log("GamePause）");
+        }
+        else
+        {
+           // Time.timeScale = 1f; // 恢复游戏时间
+            Debug.Log("StartGame");
+        }
+    }
+}
