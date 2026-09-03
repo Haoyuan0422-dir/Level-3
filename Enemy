@@ -1,0 +1,58 @@
+using UnityEngine;
+using TMPro; // 引入 TextMeshPro 命名空间
+
+public class Enemy : MonoBehaviour, IInteractable
+{
+    // 拖入你在 Canvas 中做好的数学题 UI 面板
+    public GameObject mathPanel;
+    public TMP_Text questionText;
+    public TMP_InputField answerInput;
+
+    // 设定这只怪物的专属问题和答案
+    public string question = "What is 3 x 3?";
+    public string correctAnswer = "9";
+
+    private bool isInteracting;
+
+    public bool CanInteract()
+    {
+        return !isInteracting;
+    }
+
+    public void Interact()
+    {
+        if (isInteracting || (PauseController.IsGamePaused && !isInteracting))
+            return;
+
+        // 暂停游戏，弹出版面
+        isInteracting = true;
+        PauseController.SetPause(true);
+        mathPanel.SetActive(true);
+
+        questionText.text = question;
+        answerInput.text = ""; // 清空上一次的输入记录
+    }
+
+    // 这个方法等下要绑定到 UI 的“提交”按钮上
+    public void CheckAnswer()
+    {
+        // 检查玩家输入的值是否等于正确答案 (Trim可以去掉多余的空格)
+        if (answerInput.text.Trim() == correctAnswer)
+        {
+            // 答对了：关闭面板，恢复时间，执行攻击/扣血逻辑
+            mathPanel.SetActive(false);
+            PauseController.SetPause(false);
+            isInteracting = false;
+
+            Debug.Log("Correct Answer, Enemy Destory");
+            // 这里替换成你的攻击代码，比如触发战斗场景，或者直接销毁敌人：
+            Destroy(gameObject);
+        }
+        else
+        {
+            // 答错了：清空输入框让玩家重试
+            Debug.Log("回答错误！");
+            answerInput.text = "";
+        }
+    }
+}
