@@ -1,0 +1,27 @@
+using UnityEngine;
+
+public class KeepTextUpright : MonoBehaviour
+{
+    private Quaternion fixedRotation;
+    private Vector3 fixedScale;
+
+    void Start()
+    {
+        // 记录初始的旋转和缩放大小
+        fixedRotation = transform.rotation;
+        fixedScale = transform.localScale;
+    }
+
+    void LateUpdate()
+    {
+        
+        transform.rotation = fixedRotation;
+     
+        float parentScaleX = transform.parent.localScale.x;
+        transform.localScale = new Vector3(
+            parentScaleX < 0 ? -fixedScale.x : fixedScale.x,
+            fixedScale.y,
+            fixedScale.z
+        );
+    }
+}
