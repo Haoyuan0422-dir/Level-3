@@ -1,0 +1,32 @@
+using UnityEngine;
+
+public class LevelManager : MonoBehaviour
+{
+    public static LevelManager instance; 
+    public GameObject portal; 
+    private int enemyCount;
+
+    private void Awake()
+    {
+        if (instance == null) instance = this;
+    }
+
+    private void Start()
+    {
+       
+        if (portal != null) portal.SetActive(false);
+
+        
+        enemyCount = FindObjectsByType<Enemy>(FindObjectsInactive.Exclude).Length;
+    }
+
+    public void EnemyDefeated()
+    {
+        enemyCount--;
+        if (enemyCount <= 0)
+        {
+            if (portal != null) portal.SetActive(true);
+            Debug.Log("No enemy no, start portal");
+        }
+    }
+}
