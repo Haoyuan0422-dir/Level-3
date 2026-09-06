@@ -1,0 +1,84 @@
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+public class MenuController1 : MonoBehaviour
+{
+    [Header("Panels")]
+    public GameObject optionsPanel;
+
+    [Header("Audio")]
+    public AudioSource clickSound;
+    public Slider volumeSlider;
+
+    private void Start()
+    {
+        // Make sure options panel is hidden at start
+        if (optionsPanel != null)
+            optionsPanel.SetActive(false);
+
+        if (volumeSlider != null)
+        {
+            volumeSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        }
+    }
+    public void OnVolumeSliderChanged()
+    {
+        // 当滑动条被拖动时，读取它的值(0~1)，并传给 MusicManager
+        if (MusicManager.instance != null && volumeSlider != null)
+        {
+            MusicManager.instance.ChangeVolume(volumeSlider.value);
+        }
+    }
+
+    // =====================
+    // Button Functions
+    // =====================
+
+    public void PlayGame()
+    {
+        PlayClickSound();
+        SceneManager.LoadScene("nn");
+    }
+
+    public void OpenOptions()
+    {
+        PlayClickSound();
+        if (optionsPanel != null)
+            optionsPanel.SetActive(true);
+    }
+
+    public void CloseOptions()
+    {
+        PlayClickSound();
+        if (optionsPanel != null)
+            optionsPanel.SetActive(false);
+    }
+
+    public void QuitGame()
+    {
+        PlayClickSound();
+
+        // Works only in build, not in editor
+        Application.Quit();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
+    public void ReturnToMainMenu()
+    {
+        PlayClickSound();
+        Time.timeScale = 1f; 
+        SceneManager.LoadScene("Main Menu");
+    }
+    // =====================
+    // Helper
+    // =====================
+
+    private void PlayClickSound()
+    {
+        if (clickSound != null)
+            clickSound.Play();
+    }
+}
