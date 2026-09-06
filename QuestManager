@@ -1,0 +1,51 @@
+using UnityEngine;
+using TMPro;
+
+public class QuestManager : MonoBehaviour
+{
+    public static QuestManager instance; 
+
+    [Header("UI References")]
+    public GameObject mathPanel;
+    public TMP_Text questionText;
+    public TMP_InputField answerInput;
+
+    private Enemy currentEnemy;
+
+    private void Awake()
+    {
+        if (instance == null) instance = this;
+    }
+
+
+    public void OpenMathPanel(Enemy enemy)
+    {
+        currentEnemy = enemy;
+
+        PauseController.SetPause(true);
+        mathPanel.SetActive(true);
+
+        questionText.text = enemy.question; 
+        answerInput.text = "";
+    }
+
+  
+    public void CheckAnswer()
+    {
+        if (currentEnemy == null) return;
+
+        if (answerInput.text.Trim() == currentEnemy.correctAnswer)
+        {
+            mathPanel.SetActive(false);
+            PauseController.SetPause(false);
+
+            currentEnemy.OnAnswerCorrect(); 
+            currentEnemy = null; 
+        }
+        else
+        {
+            Debug.Log("Wrong answer！");
+            answerInput.text = "";
+        }
+    }
+}
